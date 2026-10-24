@@ -1,0 +1,19 @@
+networks:
+  db-network:
+    external: true
+    name: db-network
+
+services:
+  app:
+    build: .
+    container_name: blogpublish
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@db-postgres:5432/${POSTGRES_DB:-app}
+    volumes:
+      - ./credentials:/app/credentials
+    ports:
+      - "8000:8000"
+    networks:
+      - db-network
